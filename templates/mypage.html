@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <title>TAT(MyPage)</title>
+    <script>
+        function openClose() {
+            if ($("#comment").css("display") == "block") {
+                $("#comment").hide();
+                $("#btn-review").text("후기상자 열기");
+            } else {
+                $("#comment").show();
+                $("#btn-review").text("후기상자 닫기");
+            }
+        }
+
+        function deleteTravel() {
+            $.ajax({
+                type: "POST",
+                url: "/delete",
+                data: { location_give: '서울' },
+                success: function (response) {
+                    console.log(response)
+                }
+            })
+        }
+
+        function saveReview() {
+            $.ajax({
+                type: "GET",
+                url: "/review",
+                data: {},
+                success: function (response) {
+                    console.log(response)
+                }
+            })
+        }
+    </script>
+
+    <style>
+        .wrap {
+            width: 900px;
+            margin: auto;
+
+        }
+
+        .card-box {
+            width: 900px;
+            height: 420px;
+            margin: auto;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .card-city {
+            height: 400px;
+
+            margin: 10px 10px 10px 10px;
+
+            background-image: url('/static/exam.jpeg');
+            background-position: center;
+            background-size: cover;
+        }
+
+        .card-city-title {
+            color: white;
+            font-size: 30px;
+        }
+
+        .card {
+            height: 400px;
+            margin: 10px 10px 10px 10px;
+        }
+
+        h2 {
+            margin: 10px 10px 10px 10px;
+        }
+
+        img {
+            height: 200px;
+
+            size: cover;
+        }
+
+        button {
+            margin: 10px 10px 10px 10px;
+        }
+
+        textarea {
+            width: 880px;
+            height: 150px;
+
+            margin: 10px 10px 10px 10px;
+        }
+
+        .comment {
+            width: 850px;
+        }
+
+        .btn-comment {
+            margin: 0px auto;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <h2>여행 1</h2>
+        <div class="card-box" id="card-box">
+            <div class="card card-city" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-city-title">인천</h5>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="/static/exam.jpeg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title" id="place">서울 명소</h5>
+                    <p class="card-text">명소 주소</p>
+                    <p class="card-text">명소 설명</p>
+                    <p class="card-text">명소 전화번호</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="/static/exam.jpeg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">숙소 이름</h5>
+                    <p class="card-text">숙소 주소</p>
+                    <p class="card-text">숙소 설명</p>
+                    <p class="card-text">숙소 전화번호</p>
+                </div>
+            </div>
+        </div>
+        <button onclick="openClose()" type="button" class="btn btn-secondary" id="btn-review">후기상자 열기</button>
+        <button onclick="deleteTravel()" type="button" class="btn btn-secondary" id="btn-review">여행 삭제</button>
+        <div class="comment" id="comment" style="display:none">
+            <textarea>가나다라마바사아자차카타파하 </textarea>
+            <button onclick="saveReview()" type="button" class="btn btn-secondary btn-comment">후기 저장</button>
+        </div>
+    </div>
+</body>
+
+</html>
