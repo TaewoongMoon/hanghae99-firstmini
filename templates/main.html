@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <!-- google web font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+
+    <title>TAT - 여행,숙박,교통을 한눈에!</title>
+
+    <!-- slick 추가를 위한 css link -->
+    <link rel="stylesheet" type="text/css" href="/static/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/slick/slick-theme.css"/>
+    <!-- slick 추가를 위한 script 연결 -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="/static/slick/slick.min.js"></script>
+
+    <!-- 자체 CSS link -->
+    <link rel="stylesheet" href="/static/tatstyle.css" type="text/css">
+    
+</head>
+
+<body>
+<div class="wrap">
+    <div class="jumbotron">
+        <div class="transbox">
+            <h1 class="title">T . A . T</h1>
+            <p class="subtitle">여행지, 숙박, 명소를 한번에 이어주는 곳</p>
+            <button class="join-btn top-btn" >JOIN</button>
+            <button class="login-btn top-btn">LOGIN</button>
+        </div>
+    </div>
+    <!-- 지역, 명소, 숙소 -->
+    <section>
+        <div class="region">
+            <div class="regions">어디로 떠나고 싶으신가요?</div>
+            <div class="region-box" id="region-box">
+
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="places" id="places">해당 지역 명소를 선택하세요</div>
+            <div class="place-box" id="place-box">
+    
+            </div>
+        <hr>
+
+        <div class="accommodations" id="places">명소 주변 숙소를 선택하세요</div>
+            <div class="accommodation-box" id="accommodation-box">
+            
+            </div>
+
+        <hr>
+
+    </section>
+
+    <footer>
+        <button class="save-btn" id="save-btn" onclick="saveTrip()">저장</button>
+    </footer>
+
+</div> 
+
+<script>
+    // 추가 필요
+    $(document).ready(function () {
+        $('.region-box').empty();
+        $('.place-box').empty();
+        $('.accommodation-box').empty();
+        showRegion();
+        $('.region-box').slick({
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 1
+        });
+    });
+    let region_list = ["서울","부산","인천","속초","해남","전주"];
+    function showRegion(){
+        for(let i = 0; i < region_list.length; i++){
+            let region_name = region_list[i];
+            let temp_html =`<div onclick="searchPlace(${i})" class="card card-region" style="background-image: url('/static/imgs/${region_list[i]}.jpeg')">
+                                <div class="card-body">
+                                    <h5 class="card-region-title" id="city0">${region_name}</h5>
+                                </div>
+                            </div>`;
+            
+            $('#region-box').append(temp_html);
+        }
+    }
+    // slick 에 사용하는 변수들
+    let placeBoxFirst = true;
+    let accommodationBoxFirst = true;
+    
+    function getImage(){
+
+    }
+    //
+
+    let my_region;
+    let my_place = {};
+    let my_trip = {"my_region" : "", "my_place":my_place};
+    let acc_list = [];
+    let place_list = [];
+    
+    // region 관련 함수 2개
+    function selectRegion(num){
+        my_region = region_list[num];
+        my_trip["my_region"] = my_region;
+        console.log("연결 성공!");
+    }
+    // region 값을 토대로 명소 검색+화면 출력 함수
+    function searchPlace(num) {
+        $('#place-box').empty(); // 출력 전 명소(place) 장소를 비움
+        $('#accommodation-box').empty(); 
+        selectRegion(num);
+        // 서버(app.py)에 요청하는 함수
+        $.ajax({
+            type: "POST", // POST 형식으로
+            url: "/api/search-1", // 해당 주소를 가진 API 에
+            data: { region_give : region_list[num] }, // 해당 data 를 보내 일을 시킨다.
+            
+            // 서버가 일을 성공하면 아래 함수를 실행 시킴
+            success: function (response) { // 함수의 지역변수로 서버에서 리턴 값을 받음
+                places_receive = JSON.parse(response['places'])['items']; // 문자열("")형태의 리턴 value를 JSON 형태로 변경
+                // 받아온 값 중 원하는 값들을 골라내 html에 반영
+                for(let i = 0; i < places_receive.length; i++){
+                    let place_name = places_receive[i]['title'];
+                    let place_url = places_receive[i]['link'];
+                    let place_category = places_receive[i]['category'];
+                    let place_phone = places_receive[i]['telephone'];
+                    let place_address = places_receive[i]['address'];
+                    let place = {"name": place_name,
+                                "url": place_url,
+                                "category": place_category,
+                                "phone": place_phone,
+                                "address": place_address
+                                }
+                    place_list[i] = place
+
+                    temp_html =`<div onclick="searchAccommodation(${i})" class="card">
+                                    <img class="card-img-top" src="/static/imgs/exam.jpeg" alt="Card image cap">
+                                    <div class="card-body">
+                                        <p class="card-title">${place_name}</p>
+                                        <p class="card-address">${place_address}</p>
+                                        <p class="card-phone">${place_phone}</p>
+                                        <a class="card-url" href="${place_url}">${place_url}</a>
+                                    </div>
+                                </div>`;
+                    $('#place-box').append(temp_html);
+                }
+                console.log("place-box 슬릭 성공!")
+                if(placeBoxFirst == false){
+                    $('.place-box').slick('unslick');
+                    $('.place-box').not('.slick-initialized').slick({
+                        infinite: true,
+                        slidesToShow: 3,
+                        slidesToScroll: 1
+                    });
+                } else {
+                    $('.place-box').not('.slick-initialized').slick({
+                        infinite: true,
+                        slidesToShow: 3,
+                        slidesToScroll: 1
+                    });
+                    placeBoxFirst = false;
+                }
+            }
+        })
+    }
+
+    // place 관련 함수
+    function selectPlace(num) {
+        my_place = place_list[num];
+        my_trip["my_place"] = my_place;
+        console.log(my_place["name"]);
+    }
+
+    function searchAccommodation(num) {
+        $('#accommodation-box').empty(); 
+        selectPlace(num);
+        $.ajax({
+            type: "POST", 
+            url: "/api/search-2", 
+            data: { place_give : my_place['name']}, 
+            success: function (response) {
+                accs_receive = JSON.parse(response["accommodations"])['items'];
+                for(let i = 0; i < accs_receive.length; i++){
+                    let acc_name = accs_receive[i]['title'];
+                    let acc_url = accs_receive[i]['link'];
+                    let acc_category = accs_receive[i]['category'];
+                    let acc_phone = accs_receive[i]['telephone'];
+                    let acc_address = accs_receive[i]['address'];
+                    let acc = {"name": acc_name,
+                                "url": acc_url,
+                                "category": acc_category,
+                                "phone": acc_phone,
+                                "address": acc_address
+                                }
+                    acc_list[i] = acc
+
+                    temp_html =`<div onclick="selectAccommodation(${i})" class="card">
+                                    <img class="card-img-top"
+                                                src="/static/imgs/exam.jpeg"
+                                                alt="Card image cap">
+                                    <div class="card-body">
+                                        <p class="card-title">${acc_name}</p>
+                                        <p class="card-address">${acc_address}</p>
+                                        <p class="card-phone">${acc_phone}</p>
+                                        <a class="card-url" href="${acc_url}">${acc_url}
+                                    </div>
+                                </div>`;
+                    $('#accommodation-box').append(temp_html);
+                }
+                console.log("accommodation-box 슬릭 성공!")
+                // slick 관련 붙여넣기 필요
+                $('.accommodation-box').not('.slick-initialized').slick({
+                    infinite: true,
+                    slidesToShow: 3,
+                    slidesToScroll: 1
+                });
+                if(accommodationBoxFirst == false){
+                    $('.accommodation-box').slick('unslick');
+                    $('.accommodation-box').not('.slick-initialized').slick({
+                        infinite: true,
+                        slidesToShow: 3,
+                        slidesToScroll: 1
+                    });
+                } else {
+                    $('.accommodation-box').not('.slick-initialized').slick({
+                        infinite: true,
+                        slidesToShow: 3,
+                        slidesToScroll: 1
+                    });
+                    accommodationBoxFirst = false;
+                }
+            }
+        })
+    }
+
+    // accommodation 관련 함수
+    function selectAccommodation() {
+
+    }
+    // 저장 관련 함수
+    function saveTrip() {
+        alert("저장 완료!");
+
+    }
+
+</script>
+
+</body>
+</html>

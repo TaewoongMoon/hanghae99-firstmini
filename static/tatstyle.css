@@ -1,0 +1,212 @@
+* {
+    font-family: 'Do Hyeon', sans-serif;
+}
+html {
+    background-color:rgb(205, 243, 241);
+}
+body{
+    background-color:rgb(205, 243, 241);
+}
+/* 전체 적용 */
+.wrap {
+    width: 900px;
+    margin: auto;
+}
+/* main title */
+.jumbotron {
+    width: 900px;
+    height: 250px;
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_h28r59t-QGj8lFu8I5EefiI7mqQyYq_8Xw&usqp=CAU");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-align: center;
+    margin: 30px 0px 0px 0px;
+    position: relative;
+}
+.transbox {
+    width: 900px;
+    height: 250px;
+    color: rgb(0, 64, 65);
+    background-color: #ffffff;
+    opacity: 0.6;
+    position: absolute;
+    padding: 40px 0px;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+.title {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 80px;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.subtitle{
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 30px;
+    margin: 0px;
+    z-index: 2;
+}
+.top-btn {
+    font-size: 1.5vh;
+    margin: 0px 5px 0px 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    float: right;
+
+}
+.login-btn {
+    background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+    z-index: 5;
+}
+.join-btn {
+    background-image: linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+}
+
+/* 지역, 명소, 숙소 */
+/* 공통 */
+section{
+    margin: 30px 0px;
+}
+
+/* 지역 적용 */
+.regions{
+    font-size: 30px;
+}
+.region-box {
+    width: 900px;
+    height: 300px;
+
+    display: flex;
+    flex-direction: row;
+}
+.card-region {
+    width: 300px;
+    height: 300px;
+
+    background-position: center;
+    background-size: cover;
+}
+.card-region-title {
+    color: white;
+    font-size: 40px;
+}
+
+/* 명소, 숙소 공통 */
+.card-img-top {
+    width: 300px;
+    height: 150px;
+}
+.card-body {
+    width: 300px;
+    height: 150px;
+}
+.card-title {
+    font-size: 20px;
+}
+.card-address {
+    font-size: 15px;
+}
+.card-phone {
+    font-size: 10px;
+}
+a {
+    width: 250px;
+    display: block;
+    white-space: nowrap;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* 명소 적용 */
+.places{
+    font-size: 30px;
+}
+.place-box {
+    width: 900px;
+    height: 300px;
+
+    display: flex;
+    flex-direction: row;
+}
+/* 숙소 적용 */
+.accommodations{
+    font-size: 30px;
+}
+.accommodation-box {
+    width: 900px;
+    height: 300px;
+
+    display: flex;
+    flex-direction: row;
+}
+/* 하단 저장 버튼 부분 */
+footer {
+    display: flex;
+    justify-content: center;
+}
+
+#save-btn {
+    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+    font-size: 2vh;
+    font-weight: bold;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 30px 0px 50px 0px;
+    border: none;
+    border-radius: 10px;
+}
+
+/* mypage 적용 CSS */
+/* trip box 공통 */
+.trip-box{
+    width: 900px;
+
+    display: flex;
+    flex-direction: row;
+}
+/* 후기 상자 적용 */
+textarea {
+    width: 880px;
+    height: 150px;
+
+    margin: 10px 10px 10px 10px;
+}
+
+.comment {
+    width: 900px;
+}
+.btn-secondary {
+    font-size: 15px;
+    margin: 0px 5px 0px 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    float: right;
+    z-index: 5;
+}
+.mypage-btn1 {
+    background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+}
+.mypage-btn2 {
+    background-image: linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+}
+.mypage-btn3 {
+    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 30px 0px 50px 0px;
+    border: none;
+    border-radius: 10px;
+}
+
+
+

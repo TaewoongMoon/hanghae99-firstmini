@@ -20,8 +20,15 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
-    <title>TAT(MyPage)</title>
+    <!-- google 웹 폰트 -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Pen+Script&display=swap"
+        rel="stylesheet">
+
+    <title>T.A.T_My Trip</title>
+
     <script>
+        // review 상자 open/close 함수
         function openClose() {
             if ($("#comment").css("display") == "block") {
                 $("#comment").hide();
@@ -32,131 +39,83 @@
             }
         }
 
+        // myPage review 저장 함수
+        function saveReview() {
+            $.ajax({
+                type: "POST",
+                url: "/api/review",
+                data: { data_give: "전달하자!!" },
+                success: function (response) {
+                    console.log(response)
+                }
+            })
+        }
+
+        // myPage 여행 삭제 함수
         function deleteTravel() {
             $.ajax({
                 type: "POST",
-                url: "/delete",
-                data: { location_give: '서울' },
+                url: "/api/delete",
+                data: { data_give: "전달하자!!" },
                 success: function (response) {
                     console.log(response)
                 }
             })
         }
 
-        function saveReview() {
+        // main page 명소 검색 API 요청 함수
+        function searchAttraction() {
+            attraction = $('#region').text();
             $.ajax({
-                type: "GET",
-                url: "/review",
-                data: {},
+                type: "POST",
+                url: "/api/search-1",
+                data: { location_give: attraction },
                 success: function (response) {
-                    console.log(response)
+                    console.log(response);
                 }
             })
         }
+
+
     </script>
+    <!-- 자체 CSS link -->
+    <link rel="stylesheet" href="/static/tatstyle.css" type="text/css">
 
-    <style>
-        .wrap {
-            width: 900px;
-            margin: auto;
-
-        }
-
-        .card-box {
-            width: 900px;
-            height: 420px;
-            margin: auto;
-
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-        }
-
-        .card-city {
-            height: 400px;
-
-            margin: 10px 10px 10px 10px;
-
-            background-image: url('/static/exam.jpeg');
-            background-position: center;
-            background-size: cover;
-        }
-
-        .card-city-title {
-            color: white;
-            font-size: 30px;
-        }
-
-        .card {
-            height: 400px;
-            margin: 10px 10px 10px 10px;
-        }
-
-        h2 {
-            margin: 10px 10px 10px 10px;
-        }
-
-        img {
-            height: 200px;
-
-            size: cover;
-        }
-
-        button {
-            margin: 10px 10px 10px 10px;
-        }
-
-        textarea {
-            width: 880px;
-            height: 150px;
-
-            margin: 10px 10px 10px 10px;
-        }
-
-        .comment {
-            width: 850px;
-        }
-
-        .btn-comment {
-            margin: 0px auto;
-            display: block;
-        }
-    </style>
 </head>
 
 <body>
     <div class="wrap">
-        <h2>여행 1</h2>
-        <div class="card-box" id="card-box">
-            <div class="card card-city" style="width: 18rem;">
+        <h2 >여행 1</h2>
+        <div class="trip-box" id="trip-box">
+            <div class="card card-region">
                 <div class="card-body">
-                    <h5 class="card-city-title">인천</h5>
+                    <h5 class="card-region-title">부산</h5>
                 </div>
             </div>
-            <div class="card" style="width: 18rem;">
+            <div class="card">
                 <img class="card-img-top" src="/static/exam.jpeg" alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title" id="place">서울 명소</h5>
-                    <p class="card-text">명소 주소</p>
-                    <p class="card-text">명소 설명</p>
-                    <p class="card-text">명소 전화번호</p>
+                    <p class="card-title">해운대</p>
+                    <p class="card-address">부산 해운대 바닷가</p>
+                    <p class="card-phone"></p>
+                    <a class="card-url" href="https://www.bada.com">https://www.asdf.com</a>
                 </div>
             </div>
-            <div class="card" style="width: 18rem;">
+            <div class="card">
                 <img class="card-img-top" src="/static/exam.jpeg" alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title">숙소 이름</h5>
-                    <p class="card-text">숙소 주소</p>
-                    <p class="card-text">숙소 설명</p>
-                    <p class="card-text">숙소 전화번호</p>
+                    <p class="card-title">해운대 게스트하우스</p>
+                    <p class="card-address">부산 해운대 바닷가 앞</p>
+                    <p class="card-phone"></p>
+                    <a class="card-url" href="https://www.bada.com">https://www.bada.com</a>
                 </div>
             </div>
         </div>
-        <button onclick="openClose()" type="button" class="btn btn-secondary" id="btn-review">후기상자 열기</button>
-        <button onclick="deleteTravel()" type="button" class="btn btn-secondary" id="btn-review">여행 삭제</button>
+        <button onclick="openClose()" type="button" class="btn btn-secondar mypage-btn1" id="btn-review">후기상자 열기</button>
+        <button onclick="deleteTravel()" type="button" class="btn btn-secondary mypage-btn2" id="btn-review">여행 삭제</button>
         <div class="comment" id="comment" style="display:none">
             <textarea>가나다라마바사아자차카타파하 </textarea>
-            <button onclick="saveReview()" type="button" class="btn btn-secondary btn-comment">후기 저장</button>
+            <button onclick="saveReview()" type="button" class="btn btn-secondary mypage-btn3">후기 저장</button>
         </div>
     </div>
 </body>
