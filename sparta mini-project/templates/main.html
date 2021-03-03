@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <title>TAT - 여행,숙박,교통을 한눈에!</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        .wrap {
+            width: 900px;
+            margin: auto;
+        }
+
+        .topbar {
+            width: 900px;
+            height: 50px;
+            border-bottom: 0.5px solid grey;
+        }
+
+        .top-btn {
+            font-size: 1.5vh;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 5px 8px;
+            border: none;
+            border-radius: 10px;
+            float: right;
+        }
+
+        .login-btn {
+            background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+        }
+
+        .join-btn {
+            background-image: linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+        }
+
+        .jumbotron {
+            width: 900px;
+            height: 250px;
+            background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_h28r59t-QGj8lFu8I5EefiI7mqQyYq_8Xw&usqp=CAU");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            text-align: center;
+            margin: 30px 0px;
+            position: relative;
+        }
+
+        .transbox {
+            width: 900px;
+            height: 250px;
+            background-color: #ffffff;
+            opacity: 0.6;
+            position: absolute;
+            padding: 40px 0px;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .transbox h1,p {
+            color: black;
+        }
+
+        transbox h1 {
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        transbox p {
+            font-family: 'Nanum Pen Script', cursive;
+        }
+
+        .site-title {
+            font-size: 70px;
+        }
+
+        .site-desc {
+            font-size: 22px;
+        }
+
+        .select {
+            font-size: 3vh;
+        }
+
+        #region-box {
+            width: 900px;
+            height: 300px;
+
+            /* 손윤환 추가 */
+            display: flex;
+            flex-direction: row;
+        }
+
+        .columns {
+            width: 900px;
+            height: 400vh;
+        }
+
+        .card {
+            width:300px;
+            height:200px;
+        }
+
+        .card-title {
+            font-size: 4vh;
+        }
+
+        footer {
+            display: flex;
+            justify-content: center;
+        }
+
+        .save-btn {
+            background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            font-size: 2vh;
+            font-weight: bold;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 30px 0px 50px 0px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        /* 손윤환 추가 */
+        .card-city {
+            height: 280px;
+
+            margin: 10px 10px 10px 10px;
+
+            background-image: url('/static/exam.jpeg');
+            background-position: center;
+            background-size: cover;
+        }
+
+        .card-city-title {
+            color: white;
+            font-size: 30px;
+        }
+
+        .place-box {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+<div class="wrap">
+    <div class="topbar">
+        <button class="login-btn top-btn">LOGIN</button>
+        <button class="join-btn top-btn" >JOIN</button>
+    </div>
+
+    <div class="jumbotron">
+        <div class="transbox">
+            <h1 class="site-title">T A T</h1>
+            <p class="site-desc">Tour, Accommodation, Transportation</p>
+            <p class="site-desc">여행, 숙박, 교통을 한눈에</p>
+        </div>
+    </div>
+
+<!-- Section -->
+<section>
+    <div class="region-list"></div>
+
+    <div class="region">
+        <div class="select">지역을 선택하세요</div>
+        <div class="columns region-box" id="region-box">
+            <div onclick="searchAttraction(0)" class="card card-city" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-city-title" id="city0">인천</h5>
+                </div>
+            </div>
+            <div onclick="searchAttraction(1)" class="card card-city" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-city-title" id="city1">부산</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="select">명소를 선택하세요</div>
+        <div class="columns place-box" id="place-box">
+ 
+            </div>
+    <hr>
+
+    <div class="select">숙박하실 곳을 선택하세요</div>
+        <div class="columns" id="accommodation-box">
+        
+        </div>
+
+    <hr>
+
+    <div class="select">여기에 저장된 데이터가 보입니다.</div>
+        <div class="columns" id="data-box">
+        
+        </div>
+
+
+    <hr>
+</section>
+
+<footer>
+    <button id="save-btn" onclick() = "saveButton()">저장</button>
+</footer>
+
+</div> 
+
+<script>
+$(document).ready(function () {
+    $('#place-box').empty();
+    $('#accommodation-box').empty();
+    
+});
+let my_region= "";
+let my_place = {};
+let my_accommodation = {};
+let my_trip = {"my_region":"", my_place, my_accommodation};
+let accommodation_list = [];
+let place_list = [];
+// region 2개로 배열을 통해 순서 지정
+let region_list = ['인천', '부산']
+
+
+function selectRegion(num){
+    my_region = region_list[num];
+    my_trip['my_region'] = my_region;
+}
+
+function searchAttraction(num) {
+    $('#place-box').empty();
+    $('#accommodation-box').empty();
+    selectRegion(num);
+    $.ajax({
+        type: "POST",
+        url: "/api/search-1",
+        data: {region_give: region_list[num]},
+
+        success: function(response) {
+            places_receive = JSON.parse(response['places'])['items'];
+            for (let i = 0; i < places_receive.length; i++) {
+                place_name = places_receive[i]['title'];
+                place_url = places_receive[i]['link'];
+                place_category = places_receive[i]['category'];
+                place_phone = places_receive[i]['telephone'];
+                place_address = places_receive[i]['address'];
+
+                let place = {
+                    "name": place_name,
+                    "url": place_url,
+                    "category": place_category,
+                    "phone": place_phone,
+                    "address": place_address,
+                }
+                
+                place_list[i] = place
+
+            
+                temp_html = `<div class="card" onclick= "searchAccommodation(${i})">
+                                        <img class="card-img-top"
+                                                    src="/static/exam.jpeg"
+                                                    alt="Card image cap">
+                                        <div class="card-body">
+                                            <p class="card-title">${place_name}</p>
+                                            <p class="card-address">${place_address}</p>
+                                            <p class="card-phone">${place_phone}</p>
+                                            <a href="${place_url}">${place_url}
+                                        </div>
+                                    </div>`;
+                $('#place-box').append(temp_html);
+            }
+
+        }
+    })
+}
+function selectPlace(num){
+    my_place = place_list[num]
+    my_trip['my_place'] = my_place //굳이 이렇게 한번 더 정의 해줘야하는지 확인해보기
+}
+function searchAccommodation(num) {
+    $('#accommodation-box').empty();
+    selectPlace(num)
+    $.ajax({
+        type: "POST",
+        url: "/api/search-2",
+        data: {
+            place_give: place_list[num]['name']
+        },
+
+        success: function (response) {
+            accommodations_receive = JSON.parse(response['accommodations'])['items'];
+            for (let i = 0; i < accommodations_receive.length; i++) {
+                let accommodation_name = accommodations_receive[i]['title'];
+                let accommodation_url = accommodations_receive[i]['link'];
+                let accommodation_number = accommodations_receive[i]['telephone'];
+                let accommodation_address = accommodations_receive[i]['address'];
+                let accommodation_category = accommodations_receive[i]['category'];
+
+                let accommodation = {
+                    'name': accommodation_name,
+                    'url': accommodation_url,
+                    'phone': accommodation_number,
+                    'address': accommodation_address,
+                    'category': accommodation_category,
+
+                }
+
+                accommodation_list[i] = accommodation
+
+                temp_html2 = `<div class="card" onclick = "selectAccommodation(${i})">
+                                        <img class="card-img-top"
+                                                    src="/static/exam.jpeg"
+                                                    alt="Card image cap">
+                                        <div class="card-body">
+                                            <p class="card-title">${accommodation_name}</p>
+                                            <p class="address-title">${accommodation_address}</p>
+                                            <p class="category-title">${accommodation_category}</p>
+                                            <a href = "${accommodation_url}">${accommodation_url}                                    
+                                        </div>
+                                    </div>`;
+                $('#accommodation-box').append(temp_html2);
+            }
+
+        }
+    })
+}
+function selectAccommodation(num){
+    my_accommodation = accommodation_list[num]
+    my_trip['my_accommodation'] = my_accommodation
+    my_trip;
+    saveButton();
+}
+
+function saveButton(num){
+    $.ajax({
+        type: "POST",
+        url: "/api/save",
+        data: {
+            region_give: my_trip['my_region'],
+            placeName_give : my_trip['my_place']['name'],
+            placeAddress_give: my_trip['my_place']['address'],
+            placeUrl_give: my_trip['my_place']['url'],
+            placeNumber_give: my_trip['my_place']['phone'],
+            accommodationName_give : my_trip['my_accommodation']['name'],
+            accommodationAddress_give: my_trip['my_accommodation']['address'],
+            accommodationUrl_give : my_trip['my_accommodation']['url'],
+            accommodationNumber_give: my_trip['my_accommodation']['phone'],
+        },
+        success: function(response){
+            console.log(response['msg']);
+        }
+
+})
+}
+
+function showreviewData(){
+    $('#data-box').empty()
+    $.ajax({
+        type: 'GET',
+        url:"/api/getMyPage",
+        data:{},
+        sucess: function(response){
+            let reviewData = JSON.parse(response['all_reviewdata']);
+            for(let i=0; i < reviewData.length; i++ ){
+                let region_name = reviewData[i]['region'];
+                let place_name = reviewDasta[i]['place_name'];
+                let place_address = reviewData[i]['place_address'];
+                let place_url = reviewData[i]['place_url'];
+                let place_number = reviewData[i]['place_number'];
+                let accommodation_name = reviewData[i]['accommodation_name'];
+                let accommodation_address = reviewData[i]['accommodation_address'];
+                let accommodation_url =reviewData[i]['accommodation_url'];
+                let accommodation_number = reviewData[i]['accommodation_number'];
+
+                let temp_html = `<div class="card">
+                                        <img class="card-img-top"
+                                                    src="/static/exam.jpeg"
+                                                    alt="Card image cap">
+                                        <div class="card-body">
+                                            <p class ="region-title">${region_name}</p>
+                                            <p class="place-title">${place_name}</p>
+                                            <p class="place-address">${place_address}</p>
+                                            <a href="${place_url}">${place_url}
+                                            <p class="place_number">${place_number}</p>
+                                            <p class="accommodation_title">${accommodation_name}</p>
+                                            <p class="accommodation_address">${accommodation_address}</p>
+                                            <a href = "${accommodation_url}">${accommodation_url}
+                                            <p class="accommodation_number">${accommodation_number}</p>
+                                        </div>
+                                    </div>`;
+                $('#data-box').append(temp_html);
+
+            }
+        }
+    })
+}
+</script>
+</body>
+</html>
+
