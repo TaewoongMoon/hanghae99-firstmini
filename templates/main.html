@@ -42,44 +42,50 @@
 
 <body>
 <div class="wrap">
-    <div class="jumbotron">
-        <div class="transbox">
+    <div class="transbox">
+        <div class="jumbotron">
             <h1 class="title">T . A . T</h1>
             <p class="subtitle">여행지, 숙박, 명소를 한번에 이어주는 곳</p>
-            <button class="join-btn top-btn" >JOIN</button>
-            <button class="login-btn top-btn">LOGIN</button>
+            <div class="top-btns">
+                <button class="join-btn top-btn" onclick="logout()">LOGOUT</button>
+                <button class="login-btn top-btn" onclick="openMyPage()">My Page</button>
+            </div>
         </div>
+
     </div>
-    <!-- 지역, 명소, 숙소 -->
-    <section>
-        <div class="region">
-            <div class="regions">어디로 떠나고 싶으신가요?</div>
-            <div class="region-box" id="region-box">
 
-            </div>
-        </div>
+    <div class="wrap-card">
+        <!-- 지역, 명소, 숙소 -->
+        <section>
+            <div class="region">
+                <div class="regions">어디로 떠나고 싶으신가요?</div>
+                <div class="region-box" id="region-box">
 
-        <hr>
-
-        <div class="places" id="places">해당 지역 명소를 선택하세요</div>
-            <div class="place-box" id="place-box">
-    
-            </div>
-        <hr>
-
-        <div class="accommodations" id="places">명소 주변 숙소를 선택하세요</div>
-            <div class="accommodation-box" id="accommodation-box">
-            
+                </div>
             </div>
 
-        <hr>
+            <hr>
 
-    </section>
+            <div class="places" id="places">해당 지역 명소를 선택하세요</div>
+                <div class="place-box" id="place-box">
+        
+                </div>
+            <hr>
 
-    <footer>
-        <button class="save-btn" id="save-btn" onclick="saveTrip()">저장</button>
-    </footer>
+            <div class="accommodations" id="places">명소 주변 숙소를 선택하세요</div>
+                <div class="accommodation-box" id="accommodation-box">
+                
+                </div>
 
+            <hr>
+
+        </section>
+
+        <footer>
+            <button class="save-btn" id="save-btn" onclick="saveButton()">저장</button>
+        </footer>
+
+    </div>
 </div> 
 
 <script>
@@ -119,8 +125,9 @@
 
     let my_region;
     let my_place = {};
-    let my_trip = {"my_region" : "", "my_place":my_place};
-    let acc_list = [];
+    let my_accommodation = {};
+    let my_trip = {"my_region" : "", "my_place":my_place, "my_accommodation": my_accommodation};
+    let accommodation_list = [];
     let place_list = [];
     
     // region 관련 함수 2개
@@ -217,7 +224,7 @@
                                 "phone": acc_phone,
                                 "address": acc_address
                                 }
-                    acc_list[i] = acc
+                    accommodation_list[i] = acc
 
                     temp_html =`<div onclick="selectAccommodation(${i})" class="card">
                                     <img class="card-img-top"
@@ -259,14 +266,42 @@
     }
 
     // accommodation 관련 함수
-    function selectAccommodation() {
-
+    function selectAccommodation(num) {
+        my_trip['my_accommodation'] = accommodation_list[num]
     }
+
     // 저장 관련 함수
-    function saveTrip() {
-        alert("저장 완료!");
-
+    function saveButton(){
+        $.ajax({
+            type: "POST",
+            url: "/api/save",
+            data: {
+                region_give: my_trip['my_region'],
+                placeName_give : my_trip['my_place']['name'],
+                placeAddress_give: my_trip['my_place']['address'],
+                placeUrl_give: my_trip['my_place']['url'],
+                placeNumber_give: my_trip['my_place']['phone'],
+                accommodationName_give : my_trip['my_accommodation']['name'],
+                accommodationAddress_give: my_trip['my_accommodation']['address'],
+                accommodationUrl_give : my_trip['my_accommodation']['url'],
+                accommodationNumber_give: my_trip['my_accommodation']['phone'],
+            },
+            success: function(response){
+                console.log(response['msg']);
+            }
+        })
     }
+    // 로그인 관련 함수
+    function openMyPage() {
+        alert("마이 페이지로!");
+        window.location.replace("/mypage")
+    }
+
+    // 회원가입 관련 함수
+    function logout() {
+        alert("로그아웃!");
+    }
+
 
 </script>
 
