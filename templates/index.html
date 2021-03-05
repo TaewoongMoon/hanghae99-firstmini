@@ -5,13 +5,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <!-- Bulma CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -24,9 +20,11 @@
     <!-- google web font -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
-
-    <title>TAT - 여행,숙박,교통을 한눈에!</title>
-
+    <!-- og data, favicon -->
+    <meta property="og:title" content="T.A.T travel"/>
+    <meta property="og:description" content="여행지, 숙박, 명소를 한번에!"/>
+    <meta property="og:image" content="/static/og/ogimg.png"/>
+    <link rel="shortcut icon" href="/static/og/tatfavicon.ico">
     <!-- slick 추가를 위한 css link -->
     <link rel="stylesheet" type="text/css" href="/static/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="/static/slick/slick-theme.css"/>
@@ -34,10 +32,13 @@
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script type="text/javascript" src="/static/slick/slick.min.js"></script>
-
     <!-- 자체 CSS link -->
     <link rel="stylesheet" href="/static/tatstyle.css" type="text/css">
-    
+    <!-- 토큰 삭제를 위한 link -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <title>TAT - 여행,숙박,교통을 한눈에!</title>
+
 </head>
 
 <body>
@@ -51,7 +52,6 @@
                 <button class="login-btn top-btn" onclick="openMyPage()">My Page</button>
             </div>
         </div>
-
     </div>
 
     <div class="wrap-card">
@@ -89,7 +89,6 @@
 </div> 
 
 <script>
-    // 추가 필요
     $(document).ready(function () {
         $('.region-box').empty();
         $('.place-box').empty();
@@ -107,22 +106,19 @@
             let region_name = region_list[i];
             let temp_html =`<div onclick="searchPlace(${i})" class="card card-region" style="background-image: url('/static/imgs/${region_list[i]}.jpeg')">
                                 <div class="card-body">
-                                    <h5 class="card-region-title" id="city0">${region_name}</h5>
+                                    <h5 class="card-region-title" id="city${i}">${region_name}</h5>
                                 </div>
                             </div>`;
             
             $('#region-box').append(temp_html);
         }
     }
-    // slick 에 사용하는 변수들
+    // slick 에 사용하는 전역 변수
     let placeBoxFirst = true;
     let accommodationBoxFirst = true;
     
-    function getImage(){
-
-    }
-    //
-
+    
+    // mypage card 만들기 위한 전역 변수
     let my_region;
     let my_place = {};
     let my_accommodation = {};
@@ -157,16 +153,22 @@
                     let place_category = places_receive[i]['category'];
                     let place_phone = places_receive[i]['telephone'];
                     let place_address = places_receive[i]['address'];
+                    let img_j;
+                    if(0<= num && num < 4){img_j="jpeg"}
+                    if(3<= num && num < 7){img_j="jpg"}
+                    let img_url = `/static/imgs/${num+1}/${i+1}.${img_j}`
+                    console.log(img_url)
                     let place = {"name": place_name,
                                 "url": place_url,
                                 "category": place_category,
                                 "phone": place_phone,
-                                "address": place_address
+                                "address": place_address,
+                                "img":img_url
                                 }
                     place_list[i] = place
 
                     temp_html =`<div onclick="searchAccommodation(${i})" class="card">
-                                    <img class="card-img-top" src="/static/imgs/exam.jpeg" alt="Card image cap">
+                                    <img class="card-img-top" src="/static/imgs/${num+1}/${i+1}.${img_j}" alt="Card image cap">
                                     <div class="card-body">
                                         <p class="card-title">${place_name}</p>
                                         <p class="card-address">${place_address}</p>
@@ -196,6 +198,7 @@
         })
     }
 
+
     // place 관련 함수
     function selectPlace(num) {
         my_place = place_list[num];
@@ -218,6 +221,7 @@
                     let acc_category = accs_receive[i]['category'];
                     let acc_phone = accs_receive[i]['telephone'];
                     let acc_address = accs_receive[i]['address'];
+                    console.log(my_region, my_place["name"], acc_name)
                     let acc = {"name": acc_name,
                                 "url": acc_url,
                                 "category": acc_category,
@@ -267,7 +271,7 @@
 
     // accommodation 관련 함수
     function selectAccommodation(num) {
-        my_trip['my_accommodation'] = accommodation_list[num]
+        my_trip['my_accommodation'] = accommodation_list[num];
     }
 
     // 저장 관련 함수
@@ -280,28 +284,40 @@
                 placeName_give : my_trip['my_place']['name'],
                 placeAddress_give: my_trip['my_place']['address'],
                 placeUrl_give: my_trip['my_place']['url'],
-                placeNumber_give: my_trip['my_place']['phone'],
+                placeImg_give: my_trip['my_place']['img'],
                 accommodationName_give : my_trip['my_accommodation']['name'],
                 accommodationAddress_give: my_trip['my_accommodation']['address'],
                 accommodationUrl_give : my_trip['my_accommodation']['url'],
-                accommodationNumber_give: my_trip['my_accommodation']['phone'],
             },
             success: function(response){
-                console.log(response['msg']);
+                alert(response['msg']);
             }
         })
     }
     // 로그인 관련 함수
     function openMyPage() {
         alert("마이 페이지로!");
-        window.location.replace("/mypage")
+        window.location.replace("/mypage");
     }
 
-    // 회원가입 관련 함수
+    // 로그아웃 관련 함수
     function logout() {
-        alert("로그아웃!");
+        alert('로그아웃!');
+        $.removeCookie('mytoken',null,{ path:'/'});
+        window.location.href = "/login"
     }
 
+    // place, acc ogimg 추출 함수
+    function getImage(url) {
+        $.ajax({
+            type: "POST", 
+            url: "/api/get-img", 
+            data: { url_give : url}, 
+            success: function (response) {
+                console.log(response)
+            }
+        })
+    }
 
 </script>
 
