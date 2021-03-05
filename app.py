@@ -107,8 +107,8 @@ def search_accommodation():
 
 # 네이버 검색 요청 함수
 def search(value):
-   client_id = ""
-   client_secret = ""
+   client_id = "nMm0qI07MHER7JFknCGp"
+   client_secret = "BcBS7jNooM"
    encText = urllib.parse.quote(value) # 지역변수 value 값을 넣어 url 에 넣을 값으로 변경해줌
    url = "https://openapi.naver.com/v1/search/local.json?query=" + encText +  "&display=5" + "&sort=comment" # json 결과
    # url = "https://openapi.naver.com/v1/search/blog.xml?query=" + encText # xml 결과
