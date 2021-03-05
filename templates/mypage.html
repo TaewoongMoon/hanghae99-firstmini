@@ -4,13 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <!-- Optional JavaScript -->
-
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
@@ -19,19 +16,23 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-
     <!-- google 웹 폰트 -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Pen+Script&display=swap"
         rel="stylesheet">
+    <!-- 토큰 삭제를 위한 link -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <!-- og data, favicon -->
+    <meta property="og:title" content="T.A.T travel"/>
+    <meta property="og:description" content="여행지, 숙박, 명소를 한번에!"/>
+    <meta property="og:image" content="/static/og/ogimg.png"/>
+    <link rel="shortcut icon" href="/static/og/tatfavicon.ico">
+    <!-- 자체 CSS link -->
+    <link rel="stylesheet" href="/static/tatstyle.css" type="text/css">       
 
     <title>T.A.T_My Trip</title>
 
-
-    <!-- 자체 CSS link -->
-    <link rel="stylesheet" href="/static/tatstyle.css" type="text/css">
-    <!-- 자체 script  -->
-    <!-- <script type="text/javascript" src="/static/tatscript.js"></script>  -->
+   
     <script>
         // 문서 새로고침 시 동작하는 함수
         $(document).ready(function () {
@@ -59,18 +60,19 @@
                 data: {},
                 success: function (response) {
                     console.log(response);
-                    mytrip_receive = response['all_reviewdata'];
-                    for (i = 0; i < mytrip_receive.length; i++) {
+                    mytrip_receive = response['mypage_data'];
+                    for (let i = 0; i < mytrip_receive.length; i++) {
+                        trip_id = mytrip_receive[i]['_id'];
+                        trip_review = mytrip_receive[i]['review'];
                         region_name = mytrip_receive[i]['region'];
                         place_name = mytrip_receive[i]['place_name'];
                         place_url = mytrip_receive[i]['place_url'];
-                        place_phone = mytrip_receive[i]['place_phone'];
                         place_address = mytrip_receive[i]['place_address'];
+                        place_img = mytrip_receive[i]['place_img'];
                         acc_name = mytrip_receive[i]['accommodation_name'];
                         acc_url = mytrip_receive[i]['accommodation_url'];
-                        acc_phone = mytrip_receive[i]['accommodation_phone'];
                         acc_address = mytrip_receive[i]['accommodation_address'];
-                        temp_html = `<h2 >My Trip ${i + 1}</h2>
+                        temp_html = `<h2>My Trip ${i + 1}</h2>
                         <div class="trip-box" id="trip-box" >
                             <div class="card card-region" style="background-image: url('/static/imgs/${region_name}.jpeg')">
                                 <div class="card-body">
@@ -78,11 +80,10 @@
                                 </div>
                             </div>
                             <div class="card">
-                                <img class="card-img-top" src="/static/imgs/exam.jpeg" alt="Card image cap">
+                                <img class="card-img-top" src="${place_img}" alt="Card image cap">
                                 <div class="card-body">
                                     <p class="card-title">${place_name}</p>
                                     <p class="card-address">${place_address}</p>
-                                    <p class="card-phone">${place_phone}</p>
                                     <a class="card-url" href="${place_url}">${place_url}</a>
                                 </div>
                             </div>
@@ -91,18 +92,17 @@
                                 <div class="card-body">
                                     <p class="card-title">${acc_name}</p>
                                     <p class="card-address">${acc_address}</p>
-                                    <p class="card-phone">${acc_phone}</p>
                                     <a class="card-url" href="${acc_url}">${acc_url}</a>
                                 </div>
                             </div>
                         </div>
                         <div class="trip-btns">
                             <button onclick="openClose(${i})" type="button" class="btn btn-primary reviewbox-btn" id="btn-review${i}">후기상자 열기</button>
-                            <button onclick="deleteTravel(${i})" type="button" class="btn btn-danger delete-btn" id="btn-delete">여행 삭제</button>
+                            <button onclick="deleteTravel('${trip_id}')" type="button" class="btn btn-danger delete-btn" id="btn-delete">여행 삭제</button>
                         </div>
                         <div class="comment${i}" id="comment${i}" style="display:none">
-                            <textarea class="review${i}">가나다라마바사아자차카타파하 </textarea>
-                            <button onclick="saveReview(${i})" type="button" class="btn btn-info comment-save-btn">후기 저장</button>
+                            <textarea class="review${i}" id="${trip_id}">${trip_review}</textarea>
+                            <button onclick="saveReview('${trip_id}')" type="button" class="btn btn-info comment-save-btn">후기 저장</button>
                         </div>`;
                         console.log(temp_html);
                         $('#wrap-card').append(temp_html);
@@ -112,15 +112,12 @@
         }
 
         // myPage 여행 삭제 함수
-        function deleteTravel(num) {
-            review = $("#review" + num);
-            // id = "";
-            // token = {};
-            // num = 0;
+        function deleteTravel(trip_id) {
+
             $.ajax({
                 type: "POST",
                 url: "/api/delete",
-                data: { id_give: id, token_give: token, num_give: num, review_give: review },
+                data: { trip_id_give: trip_id},
                 success: function (response) {
                     console.log(response)
                     showMyPage();
@@ -128,49 +125,14 @@
             })
         }
         
-        // function deleteTravel(num) {
-        //     alert(num + "상자 삭제 완료!")
-        //     id = "";
-        //     token = {};
-        //     num = 0;
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "/api/delete",
-        //         data: { id_give: id, token_give: token, num_give: num, review_give: review },
-        //         success: function (response) {
-        //             console.log(response)
-        //             showMyPage();
-        //         }
-        //     })
-        // }
-        // function saveReview(num) {
-        //     alert(num + "상자 저장 완료!")
-        //     review = $("#review" + num);
-        //     id = "";
-        //     token = {};
-        //     num = 0;
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "/api/delete",
-        //         data: { id_give: id, token_give: token, num_give: num, review_give: review },
-        //         success: function (response) {
-        //             console.log(response)
-        //             showMyPage();
-        //         }
-        //     })
-        // }
-        function saveReview(num) {
-            let review = $("#review"+num).val()
-            let today = new Date().toISOString()
+        function saveReview(trip_id) {
+            review = $(`#${trip_id}`).val();
             $.ajax({
                 type: "POST",
                 url: "/api/review",
-                data: {
-                    review_give: comment,
-                    date_give: today
-                },
+                data: { trip_id_give: trip_id, review_give: review },
                 success: function (response) {
-                    $("#modal-post").removeClass("is-active")
+                    console.log(response)
                     window.location.reload()
                 }
             })
@@ -188,10 +150,34 @@
                 }
             })
         }
+        // index 페이지 이동
+        function openIndex(){
+            window.location.replace("/");
+        }
+
+        // 로그아웃 관련 함수
+        function logout() {
+            alert('로그아웃!');
+            $.removeCookie('mytoken',null,{ path:'/'});
+            window.location.href = "/login"
+        }
+
     </script>
 </head>
 
 <body>
+    <section>
+        <div class="transbox">
+            <div class="jumbotron">
+                <h1 class="title">T . A . T</h1>
+                <p class="subtitle">여행지, 숙박, 명소를 한번에 이어주는 곳</p>
+                <div class="top-btns">
+                    <button class="join-btn top-btn" onclick="logout()">LOGOUT</button>
+                    <button class="login-btn top-btn" onclick="openIndex()">여행 구경가기</button>
+                </div>
+            </div>
+        </div>
+    </section>
     <div class="wrap-card" id="wrap-card">
         
     </div>
